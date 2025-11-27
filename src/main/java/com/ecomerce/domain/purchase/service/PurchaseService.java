@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ecomerce.domain.item.repository.ItemOptionRepository;
 import com.ecomerce.domain.item.repository.ItemRepository;
 import com.ecomerce.domain.purchase.dto.PurchaseDetailDto;
 import com.ecomerce.domain.purchase.dto.PurchaseItemDto;
@@ -15,42 +17,63 @@ import com.ecomerce.domain.purchase.entity.PurchaseItemEntity;
 import com.ecomerce.domain.purchase.enums.DeliveryStatus;
 import com.ecomerce.domain.purchase.repository.PurchaseDetailRepository;
 import com.ecomerce.domain.purchase.repository.PurchaseItemRepository;
+import com.ecomerce.domain.review.repository.ReviewRepository;
 import com.ecomerce.domain.item.entity.ItemEntity;
+import com.ecomerce.domain.item.entity.ItemOptionEntity;
 
 @Service
 public class PurchaseService {
 	
-	@Autowired
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
     
-    @Autowired
-    private PurchaseItemRepository purchaseItemRepository;
+    private final PurchaseItemRepository purchaseItemRepository;
 
-    @Autowired
-    private PurchaseDetailRepository purchaseDetailRepository;
+    private final PurchaseDetailRepository purchaseDetailRepository;
+
+    private final ItemOptionRepository itemOptionRepository;
+
+    public PurchaseService(ItemRepository itemRepository, PurchaseItemRepository purchaseItemRepository, 
+                    PurchaseDetailRepository purchaseDetailRepository, ItemOptionRepository itemOptionRepository) {
+        this.itemRepository = itemRepository;
+        this.purchaseItemRepository = purchaseItemRepository;
+        this.purchaseDetailRepository = purchaseDetailRepository;
+        this.itemOptionRepository = itemOptionRepository;
+    }
 
     @Transactional
     public boolean purchaseItem(PurchaseItemDto purchaseItemDto, PurchaseDetailDto purchaseDetailDto) {
 
-        ItemEntity item = itemRepository.findById(purchaseItemDto.getItemId())
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        
+        ItemOptionEntity option = itemOptionRepository.findById(purchaseItemDto.getOptionId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 옵션입니다."));
+
+        int currentQuantity = option.getOptionQuantity();
+        int purchaseQty = purchaseDetailDto.getQuantity();
+
+        if (currentQuantity < purchaseQty) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+
+        option.setOptionQuantity(currentQuantity - purchaseQty);
+        itemOptionRepository.save(option);
+
         PurchaseDetailEntity purchaseDetail = PurchaseDetailEntity.builder()
-                .userId(purchaseDetailDto.getUserId())
-                .purchaseDate(purchaseDetailDto.getPurchaseDate())
-                .deliveryStatus(purchaseDetailDto.getDeliveryStatus())
-                .build();
-        purchaseDetail = purchaseDetailRepository.save(purchaseDetail);  
-        
+            .userId(purchaseDetailDto.getUserId())
+            .purchaseDate(purchaseDetailDto.getPurchaseDate())
+            .deliveryStatus(purchaseDetailDto.getDeliveryStatus())
+            .quantity(purchaseDetailDto.getQuantity())
+            .build();
+
+        purchaseDetail = purchaseDetailRepository.save(purchaseDetail);
+
         PurchaseItemEntity purchaseItem = PurchaseItemEntity.builder()
             .purchaseId(purchaseDetail.getPurchaseId())
-            .itemId(purchaseItemDto.getItemId())
+            .optionId(purchaseItemDto.getOptionId())
             .build();
+
         purchaseItemRepository.save(purchaseItem);
 
         return true;
     }
-
 
     @Transactional(readOnly = true)
     public List<PurchaseDetailDto> getAllPurchases() {

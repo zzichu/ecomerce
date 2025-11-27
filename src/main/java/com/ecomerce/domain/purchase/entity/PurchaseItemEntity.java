@@ -21,6 +21,6 @@ public class PurchaseItemEntity {
     private Long purchaseId;
 
     @Id
-    private Long itemId;
+    private Long optionId;
 
 }

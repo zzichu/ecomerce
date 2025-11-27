@@ -1,27 +1,17 @@
 package com.ecomerce.domain.purchase.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor 
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class PurchaseItemDto {
     private Long purchaseId;
-    private Long itemId;
-
-	public Long getPurchaseId() {
-		return purchaseId;
-	}
-	public void setPurchaseId(Long purchaseId) {
-		this.purchaseId = purchaseId;
-	}
-	public Long getItemId() {
-		return itemId;
-	}
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
-
+    private Long optionId;
 }

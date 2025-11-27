@@ -33,6 +33,8 @@ public class PurchaseDetailEntity {
 	@Enumerated(EnumType.STRING)
 	private DeliveryStatus deliveryStatus;
 
+    private int quantity;
+
 	public void changeDeliveryStatus(DeliveryStatus newStatus) {
 	    this.deliveryStatus = newStatus;
 	}

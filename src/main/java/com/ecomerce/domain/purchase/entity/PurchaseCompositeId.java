@@ -20,6 +20,6 @@ public class PurchaseCompositeId implements Serializable{
 
     private Long purchaseId;
 
-    private Long itemId;
+    private Long optionId;
 
 }
