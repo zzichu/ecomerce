@@ -64,7 +64,7 @@ public class ReviewEntity {
         this.deletedStatus = reviewDto.getDeletedStatus();
     }
 
-    public void deleteReview() {
+    public void delete() {
         this.deletedStatus = 1;
     }
 }

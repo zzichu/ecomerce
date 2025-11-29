@@ -48,15 +48,15 @@ public class ReviewController {
 
     // 리뷰 삭제
     @PatchMapping("/{reviewId}")
-    public ResponseEntity<ApiResponse<ReviewDto>> deleteReview(@PathVariable Long reviewId) {
+    public ResponseEntity<ApiResponse<ReviewDto>> deleteReview(@PathVariable("reviewId") Long reviewId) {
         ReviewDto deletedReview = reviewService.deleteReview(reviewId);
         ApiResponse<ReviewDto> response = new ApiResponse<>(true, "리뷰 삭제 성공", deletedReview);
         return ResponseEntity.ok(response);
     }   
 
     // 특정 상품에 대한 리뷰 전체 조회
-    @GetMapping("/{itemId}")
-    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReviewsByItem(@PathVariable Long itemId) {
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReviewsByItem(@PathVariable("itemId")  Long itemId) {
         List<ReviewDto> reviews = reviewService.getReviewsByItemId(itemId);
         ApiResponse<List<ReviewDto>> response = new ApiResponse<>(true, "상품 리뷰 전체 조회 성공", reviews);
         return ResponseEntity.ok(response);
@@ -64,7 +64,7 @@ public class ReviewController {
 
     // 리뷰 단건 조회
     @GetMapping("/{reviewId}")
-    public ResponseEntity<ApiResponse<ReviewDto>> getReviewById(@PathVariable Long reviewId) {
+    public ResponseEntity<ApiResponse<ReviewDto>> getReviewById(@PathVariable("reviewId") Long reviewId) {
         ReviewDto review = reviewService.getReviewById(reviewId);
         ApiResponse<ReviewDto> response = new ApiResponse<>(true, "리뷰 조회 성공", review);
         return ResponseEntity.ok(response);

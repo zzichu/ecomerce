@@ -58,7 +58,7 @@ public class ReviewService {
     public ReviewDto deleteReview(Long reviewId) {
         ReviewEntity review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
-        review.deleteReview(); // 1=삭제됨 // TODO: set바꾸기..(수정완)
+        review.delete(); // 1=삭제됨 // TODO: set바꾸기..(수정완)
         
         reviewRepository.save(review);
 

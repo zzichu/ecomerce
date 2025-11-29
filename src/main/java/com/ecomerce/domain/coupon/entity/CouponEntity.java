@@ -65,7 +65,7 @@ public class CouponEntity {
     @Column(name = "deleted_status")
     private int deletedStatus = 0;
 
-     public void update(CouponDto couponDto) {
+    public void update(CouponDto couponDto) {
         this.couponName = couponDto.getCouponName();
         this.discountRate = couponDto.getDiscountRate();
         this.usedDate = couponDto.getUsedDate();

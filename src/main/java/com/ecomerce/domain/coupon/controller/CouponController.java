@@ -36,7 +36,7 @@ public class CouponController {
 
     // 쿠폰 수정
     @PutMapping //TODO: PATCH와 PUT 차이 찾아보기
-    //TODO: ResponseEntity 찾아보기..
+    //TODO: ResponseEntity 찾아보기.. (한번 더!)
     public ResponseEntity<ApiResponse<CouponDto>> updateCoupon(@RequestBody CouponDto couponDto) {
         CouponDto updated = couponService.updateCoupon(couponDto);
         ApiResponse<CouponDto> response = new ApiResponse<>(true, "쿠폰 수정 성공", updated);
