@@ -28,7 +28,7 @@ public class ItemService {
             throw new IllegalArgumentException("이미 존재하는 아이템입니다.");
         }
 
-        ItemEntity itemEntity = ItemEntity.builder()
+        ItemEntity item = ItemEntity.builder()
 	                .itemName(itemDto.getItemName())
 	                .itemPrice(itemDto.getItemPrice())
 	                .description(itemDto.getDescription())
@@ -40,14 +40,14 @@ public class ItemService {
 	                .modifiedDate(itemDto.getModifiedDate())
 	                .build(); //불변성이 있어서, 가독성 좋음
 
-        itemRepository.save(itemEntity);
+        itemRepository.save(item);
 
         List<ItemOptionEntity> optionEntities = itemDto.getOptions().stream()
             .map(optionDto -> {
                 ItemOptionEntity optionEntity = ItemOptionEntity.builder()
                     .optionName(optionDto.getOptionName())
                     .optionQuantity(optionDto.getOptionQuantity())
-                    .item(itemEntity)   // 연관관계 설정
+                    .item(item)   // 연관관계 설정
                     .createdDate(optionDto.getCreatedDate())
                     .modifiedDate(optionDto.getModifiedDate())
                     .deletedStatus(optionDto.getDeletedStatus() != null ? optionDto.getDeletedStatus() : false)
@@ -57,7 +57,7 @@ public class ItemService {
                 return optionEntity;
             }).collect(Collectors.toList());
 
-        itemEntity.setOptions(optionEntities);
+        item.setOptions(optionEntities); //TODO: 더티체킹 변경감지 addoption으로 바꾸기
 
     }
     
