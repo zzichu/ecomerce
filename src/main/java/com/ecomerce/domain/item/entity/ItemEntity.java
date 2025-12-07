@@ -1,9 +1,11 @@
 package com.ecomerce.domain.item.entity;
 
+import com.ecomerce.domain.item.dto.ItemOptionDto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -76,4 +78,23 @@ public class ItemEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemOptionEntity> options = new ArrayList<>();
+
+    //TODO: itemEntity ->  itemDto 변환 (옵션)
+    //팩토리 메소드 패턴 : 정적메소드를 재사용
+    public List<ItemOptionDto> toOptionDtos() {
+        return this.options.stream()
+                .map(option -> ItemOptionDto.builder()
+                        .optionId(option.getOptionId())
+                        .optionName(option.getOptionName())
+                        .optionQuantity(option.getOptionQuantity())
+                        .itemId(this.itemId)  // 또는 option.getItem().getItemId()
+                        .createdDate(option.getCreatedDate())
+                        .modifiedDate(option.getModifiedDate())
+                        .deletedStatus(option.getDeletedStatus())
+                        .creationUser(option.getCreationUser())
+                        .modificationUser(option.getModificationUser())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
 }

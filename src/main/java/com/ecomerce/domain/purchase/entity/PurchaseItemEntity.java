@@ -1,5 +1,7 @@
 package com.ecomerce.domain.purchase.entity;
 
+import com.ecomerce.domain.item.dto.ItemOptionDto;
+import com.ecomerce.domain.item.entity.ItemOptionEntity;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -19,8 +21,5 @@ import lombok.NoArgsConstructor;
 public class PurchaseItemEntity {
     @Id
     private Long purchaseId;
-
-    @Id
-    private Long optionId;
-
+    @Id private Long optionId;
 }
