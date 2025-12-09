@@ -7,8 +7,10 @@ import com.ecomerce.domain.purchase.entity.PurchaseCompositeId;
 import com.ecomerce.domain.purchase.entity.PurchaseItemEntity;
 import com.ecomerce.domain.purchase.id.PurchaseItemId;
 
+import java.util.List;
+
 @Repository
 public interface PurchaseItemRepository extends JpaRepository<PurchaseItemEntity, PurchaseCompositeId> {
-	
+    List<PurchaseItemEntity> findByPurchaseId(long purchaseId);
 }
 

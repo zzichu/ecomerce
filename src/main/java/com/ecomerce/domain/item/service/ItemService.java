@@ -131,6 +131,7 @@ public class ItemService {
                         .createdDate(itemEntity.getCreatedDate())
                         .modifiedDate(itemEntity.getModifiedDate())
                         .deletedStatus(itemEntity.getDeletedStatus())
+                        .options(itemEntity.toOptionDtos())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -152,6 +153,7 @@ public class ItemService {
                 .createdDate(itemEntity.getCreatedDate())
                 .modifiedDate(itemEntity.getModifiedDate())
                 .deletedStatus(itemEntity.getDeletedStatus())
+                .options(itemEntity.toOptionDtos())
                 .build();
     }
 
