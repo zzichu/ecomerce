@@ -1,7 +1,9 @@
 package com.ecomerce.domain.purchase.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.ecomerce.domain.item.dto.ItemOptionDto;
 import com.ecomerce.domain.purchase.enums.DeliveryStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +22,6 @@ public class PurchaseDetailDto {
     private LocalDateTime purchaseDate;
     private DeliveryStatus deliveryStatus;
     private int quantity;
+    private List<ItemOptionDto> options;
+
 }

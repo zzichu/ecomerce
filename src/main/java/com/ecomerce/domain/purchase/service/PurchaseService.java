@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ecomerce.domain.item.dto.ItemOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,50 +43,74 @@ public class PurchaseService {
 
     @Transactional
     public boolean purchaseItem(PurchaseItemDto purchaseItemDto, PurchaseDetailDto purchaseDetailDto) {
+        Long optionId = purchaseItemDto.getOptionId();
+        int purchaseQuantity = purchaseDetailDto.getQuantity();
 
-        ItemOptionEntity option = itemOptionRepository.findById(purchaseItemDto.getOptionId())
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 옵션입니다."));
+        // TODO: 분산락에 대해서도 공부하고 적용(나중에)
+        ItemOptionEntity option = itemOptionRepository.findByIdWithPessimisticLock(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 옵션입니다."));
 
-        int currentQuantity = option.getOptionQuantity();
-        int purchaseQty = purchaseDetailDto.getQuantity();
-
-        if (currentQuantity < purchaseQty) {
+        if (option.getOptionQuantity() < purchaseQuantity) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
 
-        option.setOptionQuantity(currentQuantity - purchaseQty);
-        itemOptionRepository.save(option);
+        int updatedRows = itemOptionRepository.decrementStock(optionId, purchaseQuantity);
+
+        if (updatedRows == 0) {
+            throw new IllegalArgumentException("재고가 부족합니다. (동시 구매 충돌)");
+        }
 
         PurchaseDetailEntity purchaseDetail = PurchaseDetailEntity.builder()
-            .userId(purchaseDetailDto.getUserId())
-            .purchaseDate(purchaseDetailDto.getPurchaseDate())
-            .deliveryStatus(purchaseDetailDto.getDeliveryStatus())
-            .quantity(purchaseDetailDto.getQuantity())
-            .build();
+                .userId(purchaseDetailDto.getUserId())
+                .purchaseDate(purchaseDetailDto.getPurchaseDate())
+                .deliveryStatus(purchaseDetailDto.getDeliveryStatus())
+                .quantity(purchaseQuantity)
+                .build();
 
         purchaseDetail = purchaseDetailRepository.save(purchaseDetail);
 
         PurchaseItemEntity purchaseItem = PurchaseItemEntity.builder()
-            .purchaseId(purchaseDetail.getPurchaseId())
-            .optionId(purchaseItemDto.getOptionId())
-            .build();
+                .purchaseId(purchaseDetail.getPurchaseId())
+                .optionId(optionId)
+                .build();
 
         purchaseItemRepository.save(purchaseItem);
 
         return true;
     }
 
+    //TODO: N+1 문제 한번 더 찾아보기
+
+
     @Transactional(readOnly = true)
     public List<PurchaseDetailDto> getAllPurchases() {
         return purchaseDetailRepository.findAll().stream()
-            .map(detail -> PurchaseDetailDto.builder()
-                .purchaseId(detail.getPurchaseId())
-                .userId(detail.getUserId())
-                .purchaseDate(detail.getPurchaseDate())
-                .deliveryStatus(detail.getDeliveryStatus())
-                .build())
-            .collect(Collectors.toList());
+                .map(detail -> {
+                    List<PurchaseItemEntity> purchaseItems = purchaseItemRepository.findByPurchaseId(detail.getPurchaseId());
+
+                    List<ItemOptionDto> optionDtos = purchaseItems.stream()
+                            .map(purchaseItem -> {
+                                ItemOptionEntity option = itemOptionRepository.findById(purchaseItem.getOptionId())
+                                        .orElseThrow(() -> new IllegalArgumentException("옵션 없음"));
+                                return ItemOptionDto.builder()
+                                        .optionId(option.getOptionId())
+                                        .optionName(option.getOptionName())
+                                        .optionQuantity(option.getOptionQuantity())
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
+
+                    return PurchaseDetailDto.builder()
+                            .purchaseId(detail.getPurchaseId())
+                            .userId(detail.getUserId())
+                            .purchaseDate(detail.getPurchaseDate())
+                            .deliveryStatus(detail.getDeliveryStatus())
+                            .options(optionDtos)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
+
 
     @Transactional(readOnly = true)
     public Optional<PurchaseDetailDto> getPurchaseById(Long purchaseId) {
