@@ -10,7 +10,7 @@
 ---
 
 ## 🏗 시스템 구조
-![Architecture Diagram](./architecture.jpg)
+![Architecture Diagram](./architecture.jpeg)
 
 | Category | Technology |
 | :--- | :--- |
