@@ -2,24 +2,24 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:70e1f5,100:ffd194&height=200&section=header&text=Ecommerce&fontSize=50" />
 
 ## 📖 프로젝트 소개
-이 프로젝트는 **Spring Boot 기반의 백엔드**와 **FastAPI 기반의 AI 서버**를 결합한 **지능형 이커머스 플랫폼**입니다.  
-사용자의 질문을 AI가 이해하고, 필요한 상품 정보를 직접 찾아 SQL 쿼리를 생성하거나 추천 결과를 반환합니다.
-
-쉽게 말해, **상품을 직접 검색하는 대신 AI에게 물어볼 수 있는 쇼핑 플랫폼**을 만드는 것이 목표였습니다.
+사용자의 질문이나 요구사항을 분석하여 **최적의 상품을 추천**하고, 
+대규모 트래픽 환경에서도 안정적인 주문 처리가 가능한 **AI 기반 이커머스 플랫폼**입니다. 
+**Spring Boot** 기반의 견고한 백엔드 아키텍처 위에 **LLM과 Vector DB를 활용한 RAG 파이프라인**을 결합하여, 
+단순 검색을 넘어선 **Text-to-SQL**을 제공하여 AI 기반 서비스로 확장하였습니다. 
+모든 인프라는 AWS EC2 환경에서 컨테이너화하여 관리 효율성을 높였습니다.
 
 ---
 
 ## 🏗 시스템 구조
 ![Architecture Diagram](./architecture.jpeg)
+<br><br>
 
-| Category | Technology |
-| :--- | :--- |
-| **Infra** | AWS EC2, Docker |
-| **Back-end** | Spring Boot 3.5.6, Redis |
-| **AI Server** | FastAPI, LangChain, LLM |
-| **Database** | MySQL, Chroma Vector DB |
-
----
+## 🪏 Stack
+#### 🌟 Java, Spring boot, Spring security
+#### 🌟 Python, Fast API, LangChain, LangGraph, Chroma vertors
+#### 🌟 MySQL, Redis, Swagger
+#### 🌟 AWS EC2, Docker
+<br>
 
 ## 🚀 주요 기능
 
@@ -34,7 +34,7 @@
 - 관련도가 높은 상품 정보를 **Chroma 벡터 유사도 검색**으로 빠르게 탐색합니다.  
 - 검색 결과를 바탕으로 실행 가능한 SQL 쿼리문을 동적으로 생성하여 백엔드로 전달합니다.
   
-[AI Server repo](https://github.com/zzichu/ecomerce-ai)
+[AI Server repo로 가기](https://github.com/zzichu/ecomerce-ai)
 
 ---
 
@@ -51,4 +51,11 @@
 Text to SQL, **자연어를 통해 상품을 검색하는 서비스**를 만들고 싶었습니다.  
 AI가 백엔드 로직과 직접 통신하며,  
 데이터 조회부터 응답 생성까지 모두 자동화되는 구조를 실험했습니다.
+
+
+## ERD Diagram
+![ERD Diagram](./erd-diagram.png)
+
+## API 명세서
+[API 명세서 보기](https://zzichu.notion.site/e-comerce-Project-27964f2827ac804a9399f2dd4e0d7885)
 
