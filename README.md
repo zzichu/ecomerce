@@ -12,14 +12,12 @@
 
 ## 🏗 시스템 구조
 ![Architecture Diagram](./architecture.jpeg)
-<br><br>
 
 ## 🪏 Stack
 #### 🌟 Java, Spring boot, Spring security
 #### 🌟 Python, Fast API, LangChain, LangGraph, Chroma vertors
 #### 🌟 MySQL, Redis, Swagger
 #### 🌟 AWS EC2, Docker
-<br>
 
 ## 🚀 주요 기능
 
