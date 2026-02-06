@@ -1,5 +1,5 @@
 # 🛒 Ecommerce AI-Integrated Platform
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:70e1f5,100:ffd194&height=200&section=header&text=Ecommerce&fontSize=50" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:70e1f5,100:ffd194&height=200&section=header&text=Ecommerce%20Platform&fontSize=50" />
 
 ## 📖 프로젝트 소개
 사용자의 질문이나 요구사항을 분석하여 **최적의 상품을 추천**하고, 
