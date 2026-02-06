@@ -65,7 +65,7 @@ class PurchaseServiceTest {
                             itemRepo,
                             purchaseItemRepo,
                             purchaseDetailRepo,
-                            itemOptionRepo
+                            itemOptionRepo, null
                     );
 
                     AtomicInteger threadStock = new AtomicInteger(9);
