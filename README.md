@@ -51,9 +51,9 @@ AI가 백엔드 로직과 직접 통신하며,
 데이터 조회부터 응답 생성까지 모두 자동화되는 구조를 실험했습니다.
 
 
-## ERD Diagram
+## ⚙️ ERD Diagram
 ![ERD Diagram](./erd-diagram.png)
 
-## API 명세서
+## 📄 API 명세서
 [API 명세서 보기](https://zzichu.notion.site/e-comerce-Project-27964f2827ac804a9399f2dd4e0d7885)
 
