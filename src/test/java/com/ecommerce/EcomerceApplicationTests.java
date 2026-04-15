@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = EcomerceApplication.class)
-@Transactional  // 🔥 데이터 롤백 보장!
+@Transactional  // 데이터 롤백 보장!
 class EcomerceApplicationTests {
 
     @Autowired
