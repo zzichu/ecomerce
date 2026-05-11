@@ -32,5 +32,5 @@ logging:
         security: DEBUG
 
 jwt:
-  secret: 0a6aee33-5845-4bc8-89be-a1fdef8c35e0
+  secret: ${JWT_SECRET}
   expiration: 3600000

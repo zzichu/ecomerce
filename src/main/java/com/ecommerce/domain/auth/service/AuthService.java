@@ -1,6 +1,7 @@
 package com.ecommerce.domain.auth.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +20,14 @@ public class AuthService {
     
     private final AuthRepository authRepository;
 
-    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.authRepository = authRepository;
-        this.authenticationManager = authenticationManager;
+        //this.authenticationManager = authenticationManager;
 		this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
 
     }
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
     
@@ -66,7 +67,7 @@ public class AuthService {
                 .deleted_status(userEntity.getDeletedStatus())
                 .build();
     }
-    
+
     @Transactional(readOnly = true)
     public String login(String email, String password) {
         UserEntity userEntity = authRepository.findByEmail(email)
@@ -76,10 +77,9 @@ public class AuthService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(email, password);
-
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        // AuthenticationManager 제거하고 직접 Authentication 객체 생성
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(email, null, List.of());
 
         String jwt = jwtTokenProvider.createToken(authentication);
 
