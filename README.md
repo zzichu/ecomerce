@@ -55,5 +55,5 @@ AI가 백엔드 로직과 직접 통신하며,
 ![ERD Diagram](./erd-diagram.png)
 
 ## 📄 API 명세서
-[API 명세서 보기](https://zzichu.notion.site/e-comerce-Project-27964f2827ac804a9399f2dd4e0d7885)
+[API 명세서 보기](https://www.notion.so/zzichu/AI-35d64f2827ac80d2a8f3f191ecbfba31)
 
