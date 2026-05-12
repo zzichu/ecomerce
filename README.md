@@ -15,8 +15,8 @@
 
 ## 🪏 Stack
 #### 🌟 Java, Spring boot, Spring security
-#### 🌟 Python, Fast API, LangChain, LangGraph, Chroma vertors
-#### 🌟 MySQL, Redis, Swagger
+#### 🌟 Python, Fast API, LangChain, Chroma
+#### 🌟 MySQL, Redis
 #### 🌟 AWS EC2, Docker
 
 ## 🚀 주요 기능
