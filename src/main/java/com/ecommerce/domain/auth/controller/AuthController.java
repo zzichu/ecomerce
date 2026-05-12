@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/join")
     public ResponseEntity<ApiResponse<UserDto>> join(@RequestBody UserDto userDto) {
         authService.registerUser(userDto);
-        ApiResponse<UserDto> response = new ApiResponse<>(true, "로그인 성공", userDto);
+        ApiResponse<UserDto> response = new ApiResponse<>(true, "회원가입 성공", userDto);
         return ResponseEntity.ok(response);
     }
     
@@ -41,16 +41,16 @@ public class AuthController {
         ApiResponse<UserDto> response = new ApiResponse<>(true, "유저 조회 성공", user);
         return ResponseEntity.ok(response);
     }
-        
+
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<TokenDto>> login(@RequestBody LoginRequest loginRequest) {
         String jwt = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt);
         TokenDto tokenDto = new TokenDto(jwt);
-        return new ResponseEntity<>(tokenDto, headers, HttpStatus.OK);
+        ApiResponse<TokenDto> response = new ApiResponse<>(true, "로그인 성공", tokenDto);
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
-
     
     @PatchMapping("/user")
     public ResponseEntity<ApiResponse<UserDto>> withDraw(@RequestParam Long userId) {

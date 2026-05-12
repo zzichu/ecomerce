@@ -3,6 +3,7 @@ package com.ecommerce.common.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,14 +28,21 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/join",
-                                "/api/auth/login",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        // 누구나
+                        .requestMatchers("/api/auth/join", "/api/auth/login").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/item", "/api/item/**").permitAll()
+                        // ADMIN만
+                        .requestMatchers(HttpMethod.PUT, "/api/coupon").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/coupon").hasRole("ADMIN")
+                        // SELLER, ADMIN만
+                        .requestMatchers(HttpMethod.POST, "/api/item").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/item").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/item/**").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/purchase/**").hasAnyRole("SELLER", "ADMIN")
+                        // USER 이상 전부
+                        .anyRequest().hasAnyRole("USER", "SELLER", "ADMIN")
                 )
                 .addFilterBefore(
                         new JwtFilter(jwtTokenProvider, customUserDetailsService),

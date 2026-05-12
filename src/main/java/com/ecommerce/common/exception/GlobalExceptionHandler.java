@@ -2,6 +2,8 @@ package com.ecommerce.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,7 +13,7 @@ import com.ecommerce.common.response.ApiResponse;
 import org.springframework.dao.DataAccessException;
 import jakarta.persistence.EntityNotFoundException;
 
-@RestControllerAdvice //TODO : AOP 개념과 controllerAdvice 어노테이션 찾아보기
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // [Bad Request] 잘못된 인자 전달 시 발생 (400)
@@ -27,6 +29,20 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ApiResponse<?> response = new ApiResponse<>(false, errorMessage, null);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    // [Unauthorized] 토큰 없음 또는 유효하지 않은 토큰 (401)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException ex) {
+        ApiResponse<?> response = new ApiResponse<>(false, "토큰이 없거나 유효하지 않습니다.", null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    // [Forbidden] 권한 없음 (403)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(AccessDeniedException ex) {
+        ApiResponse<?> response = new ApiResponse<>(false, "접근 권한이 없습니다.", null);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     // [Repository Layer] 데이터를 찾을 수 없는 경우 (404)
@@ -46,6 +62,7 @@ public class GlobalExceptionHandler {
     // [Global] 위에서 정의되지 않은 모든 서버 내부 예외 처리 (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleAllException(Exception ex) {
+        ex.printStackTrace();
         ApiResponse<?> response = new ApiResponse<>(false, "서버 내부 오류가 발생했습니다.", null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

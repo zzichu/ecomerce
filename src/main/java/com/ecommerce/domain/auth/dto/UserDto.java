@@ -18,7 +18,8 @@ public class UserDto {
     private String userRole;
     private LocalDateTime created_date;
     private LocalDateTime modified_date;
-    private Boolean deleted_status;
+    @Builder.Default
+    private Boolean deleted_status = false;
 
     public UserDto(Long userId, String password, String addressRoad, String addressDetail, String userRole) {
         this.userId = userId;

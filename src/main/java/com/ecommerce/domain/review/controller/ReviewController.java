@@ -3,13 +3,7 @@ package com.ecommerce.domain.review.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.common.response.ApiResponse;
 import com.ecommerce.domain.review.dto.ReviewDto;
@@ -33,20 +27,20 @@ public class ReviewController {
     }
 
     // 리뷰 수정
-    @PostMapping("/update")
-    public ResponseEntity<ApiResponse<ReviewDto>> updateReview(@RequestBody ReviewDto reviewDto) {
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<ApiResponse<ReviewDto>> updateReview(@PathVariable("reviewId") Long reviewId, @RequestBody ReviewDto reviewDto) {
         ReviewDto updated = reviewService.updateReview(reviewDto);
         ApiResponse<ReviewDto> response = new ApiResponse<>(true, "리뷰 수정 성공", updated);
         return ResponseEntity.ok(response);
     }
 
     // 리뷰 삭제
-    @PatchMapping("/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<ApiResponse<ReviewDto>> deleteReview(@PathVariable("reviewId") Long reviewId) {
         ReviewDto deletedReview = reviewService.deleteReview(reviewId);
         ApiResponse<ReviewDto> response = new ApiResponse<>(true, "리뷰 삭제 성공", deletedReview);
         return ResponseEntity.ok(response);
-    }   
+    }
 
     // 특정 상품에 대한 리뷰 전체 조회
     @GetMapping("/item/{itemId}")

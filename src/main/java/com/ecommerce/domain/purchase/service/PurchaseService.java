@@ -44,44 +44,6 @@ public class PurchaseService {
         this.redissonClient = redissonClient;
     }
 
-//    @Transactional
-//    public boolean purchaseItem(PurchaseItemDto purchaseItemDto, PurchaseDetailDto purchaseDetailDto) {
-//        Long optionId = purchaseItemDto.getOptionId();
-//        int purchaseQuantity = purchaseDetailDto.getQuantity();
-//
-//        // TODO: 분산락에 대해서도 공부하고 적용(나중에)
-//        ItemOptionEntity option = itemOptionRepository.findByIdWithPessimisticLock(optionId)
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 옵션입니다."));
-//
-//        if (option.getOptionQuantity() < purchaseQuantity) {
-//            throw new IllegalArgumentException("재고가 부족합니다.");
-//        }
-//
-//        int updatedRows = itemOptionRepository.decrementStock(optionId, purchaseQuantity);
-//
-//        if (updatedRows == 0) {
-//            throw new IllegalArgumentException("재고가 부족합니다. (동시 구매 충돌)");
-//        }
-//
-//        PurchaseDetailEntity purchaseDetail = PurchaseDetailEntity.builder()
-//                .userId(purchaseDetailDto.getUserId())
-//                .purchaseDate(purchaseDetailDto.getPurchaseDate())
-//                .deliveryStatus(purchaseDetailDto.getDeliveryStatus())
-//                .quantity(purchaseQuantity)
-//                .build();
-//
-//        purchaseDetail = purchaseDetailRepository.save(purchaseDetail);
-//
-//        PurchaseItemEntity purchaseItem = PurchaseItemEntity.builder()
-//                .purchaseId(purchaseDetail.getPurchaseId())
-//                .optionId(optionId)
-//                .build();
-//
-//        purchaseItemRepository.save(purchaseItem);
-//
-//        return true;
-//    }
-
     @Transactional
     public boolean purchaseItem(PurchaseItemDto purchaseItemDto,
                                 PurchaseDetailDto purchaseDetailDto) {
@@ -139,10 +101,6 @@ public class PurchaseService {
 
         return true;
     }
-
-
-    //TODO: N+1 문제 한번 더 찾아보기
-
 
     @Transactional(readOnly = true)
     public List<PurchaseDetailDto> getAllPurchases() {
